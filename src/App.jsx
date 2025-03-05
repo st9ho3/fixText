@@ -4,7 +4,7 @@ import { buildPrompt } from './prompt'
 
 function App() {
   const [response, setResponse] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState('')
   const [error, setError] = useState('')
   const [myText, setMyText] = useState('')
   const [storageTexts, setStorageTexts] = useState([])
@@ -19,12 +19,12 @@ function App() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    setIsLoading(true)
     setError('')
-
+    const promptType = e.nativeEvent.submitter.name
+    setIsLoading(promptType)
     try {
       const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' })
-      const prompt = buildPrompt(storageTexts)
+      const prompt = buildPrompt(storageTexts, promptType)
       const result = await model.generateContent(prompt)
       const text = await result.response.text()
       setResponse(text)
@@ -52,10 +52,13 @@ function App() {
 
   return (
     <div className="app">
-      <h1>Create your Text</h1>
+      <h1>Edit your text</h1>
       <form onSubmit={handleSubmit}>
-        <button type="submit" disabled={isLoading}>
-          {isLoading ? 'Thinking...' : 'Fix your text'}
+        <button name='createParagraph' type="submit" disabled={isLoading}>
+          {isLoading === 'createParagraph' ? 'Thinking...' : 'Create paragraph'}
+        </button>
+        <button name='outlineMainPoints'  type="submit" disabled={isLoading}>
+          {isLoading === 'outlineMainPoints' ? 'Thinking...' : 'Outline main points'}
         </button>
       </form>
 

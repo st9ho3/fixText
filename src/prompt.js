@@ -1,21 +1,52 @@
-export const buildPrompt = (text) => {
-    return `You are an expert in the Greek language, political science, and economics. Your task is to receive a text written in Greek that contains fragmented or spare parts of information about a subject related to EU policies, economy, and reforms. You will analyze the input text, perform a comprehensive grammar, vocabulary, and syntax check, and refactor it into a coherent, formal, and meaningful output. The output must adhere to the style of an academic paper, with precise language, logical flow, and proper academic tone. Ensure the following:
+const createParagraph = (text) => {
+     return `
+    You are an expert in the Greek language, specializing in academic writing and analysis. Your task is to refine and reconstruct provided text into a clear, logically structured paragraph suitable for an academic paper.
 
-Grammar and Syntax: Correct any grammatical errors, improve sentence structure, and ensure proper use of syntax.
-Vocabulary: Use formal and domain-specific terminology appropriate for political science and economics.
-Logical Flow: Organize the information into a clear and logical structure, ensuring the text flows smoothly from one idea to the next.
-Academic Style: Format the output as a single paragraph in the style of an academic paper, maintaining a formal and professional tone throughout.
-Paragraph Structure: Begin with a thematic sentence that introduces the main concept of the paragraph, followed by supporting details, and end with a concluding sentence if it enhances clarity or coherence.
-Length: Keep the output close in size to the original text, expanding only if necessary to improve clarity or coherence.
-Input: [Insert Greek text here]
+**Input Text:** ${text}
 
-Output: [Refactored text as a single, well-structured paragraph in the style of an academic paper, similar in length to the input]"
-Do not contain the "Output:" in the output text. Just the plain paragraph.
-Example Input (in Greek):
-"Η Ευρωπαϊκή Ένωση έχει σημαντικές πολιτικές για την οικονομία. Υπάρχουν προκλήσεις με την ανεργία και τον πληθωρισμό. Οι μεταρρυθμίσεις είναι απαραίτητες για την ανάπτυξη. Η Ελλάδα αντιμετωπίζει δυσκολίες με το χρέος."
+**Instructions:**
 
-Example Output (in Greek, refactored in academic style):
-"Η Ευρωπαϊκή Ένωση εφαρμόζει πολιτικές που στοχεύουν στην οικονομική σταθερότητα και ανάπτυξη, αντιμετωπίζοντας σημαντικές προκλήσεις όπως η ανεργία και ο πληθωρισμός. Οι μεταρρυθμίσεις αποτελούν απαραίτητο στοιχείο για την ενίσχυση της οικονομικής ανθεκτικότητας, ιδιαίτερα σε χώρες όπως η Ελλάδα, η οποία αντιμετωπίζει δυσκολίες λόγω του υψηλού δημόσιου χρέους. Η ανάγκη για συνεχείς μεταρρυθμίσεις και στρατηγικές παρεμβάσεις παραμένει κρίσιμη για την επίτευξη βιώσιμων οικονομικών αποτελεσμάτων.
+1.  **Analysis:** Carefully analyze the input text to understand its core meaning, key concepts, and intended message. Identify any ambiguities, inconsistencies, or structural weaknesses.
+2.  **Refinement:** Reconstruct the text into a single, cohesive paragraph. Ensure the paragraph maintains the original meaning of the input text.
+3.  **Academic Tone:** Employ formal, academic Greek, utilizing precise vocabulary and grammatical structures.
+4.  **Logical Structure:** Organize the paragraph with a clear introduction, development of ideas, and a concluding thought. Ensure a logical flow of information.
+5.  **Clarity and Precision:** Eliminate any vagueness or ambiguity. Ensure the paragraph is easily understood by an academic audience.
+6.  **Maintain or Slightly Expand Length:** The resulting paragraph should be approximately the same length as the original input or slightly longer if necessary to enhance clarity and logical flow. Do not shorten the overall meaning.
+7.  **Flawless Grammar and Syntax:** Ensure the paragraph is free of grammatical errors, syntactic issues, and stylistic inconsistencies.
+8.  **Contextual Appropriateness:** The paragraph should be suitable for inclusion in an academic paper, demonstrating a sophisticated understanding of the subject matter.
 
-${text}`
+**Output:**
+
+Provide the reconstructed paragraph in formal academic Greek.
+`
 }
+
+const outlineMainPoints = (text) => {
+    return `
+You are an expert in the Greek language, specializing in text analysis and summarization. Your task is to analyze a provided Greek text and extract its main points, presenting them in a concise and organized bulleted or numbered list.
+
+**Input Text:** ${text}
+
+**Instructions:**
+
+1.  **Thorough Reading:** Carefully read and understand the entire input Greek text.
+2.  **Identify Main Ideas:** Identify the core arguments, key concepts, and central themes presented in the text.
+3.  **Extract Key Points:** Extract the most important points that summarize the essence of the text.
+4.  **Concise Summarization:** Summarize each main point in a clear, concise, and accurate manner.
+5.  **Organized List:** Present the extracted main points as a numbered list. 
+6.  **Maintain Accuracy:** Ensure that the extracted points accurately reflect the meaning and intent of the original text.
+7.  **Use Formal Greek:** Use appropriate formal Greek in the bullet points/numbered list.
+8.  **Avoid Redundancy:** Eliminate any overlapping or repetitive points.
+9.  **Logical Order:** If the text presents a chronological or logical sequence, maintain that order in the list.
+10. Use plain text. Not markdown (**,**, **:**, etc.)
+
+**Output:**
+
+Provide the extracted main points in a numbered list, using formal Greek.
+`
+}
+export const buildPrompt = (text, promptType) => {
+    return promptType === 'outlineMainPoints' 
+      ? outlineMainPoints(text) 
+      : createParagraph(text)
+  }

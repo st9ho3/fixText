@@ -22,6 +22,7 @@ form {
 
 /* Unified button styles */
 button {
+  width: 8.9rem;
   background-color: black;
   color: white;
   border: none;
