@@ -10,7 +10,7 @@ Length: Keep the output close in size to the original text, expanding only if ne
 Input: [Insert Greek text here]
 
 Output: [Refactored text as a single, well-structured paragraph in the style of an academic paper, similar in length to the input]"
-
+Do not contain the "Output:" in the output text. Just the plain paragraph.
 Example Input (in Greek):
 "Η Ευρωπαϊκή Ένωση έχει σημαντικές πολιτικές για την οικονομία. Υπάρχουν προκλήσεις με την ανεργία και τον πληθωρισμό. Οι μεταρρυθμίσεις είναι απαραίτητες για την ανάπτυξη. Η Ελλάδα αντιμετωπίζει δυσκολίες με το χρέος."
 
