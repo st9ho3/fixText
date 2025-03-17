@@ -93,6 +93,7 @@ form:last-of-type input:focus {
   font-size: 1em;
   color: black;
   white-space: pre-wrap;
+  flex-wrap: wrap;
 }
 
 /* Base styles */
@@ -249,3 +250,7 @@ textarea:focus {
   outline: 2px solid #2563eb;
   outline-offset: 2px;
 }
+
+
+
+

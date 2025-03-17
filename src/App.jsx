@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { buildPrompt } from './prompt'
+import ProgressiveRenderer from './ProgressiveRenderer'
 
 function App() {
   const [response, setResponse] = useState('')
@@ -26,7 +27,7 @@ function App() {
       const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' })
       const prompt = buildPrompt(storageTexts, promptType)
       const result = await model.generateContent(prompt)
-      const text = await result.response.text()
+      const text = result.response.text()
       setResponse(text)
     } catch (err) {
       setError('Error: ' + err.message)
@@ -49,6 +50,7 @@ function App() {
         console.error('Failed to copy text: ', err);
       });
   };
+  
 
   return (
     <div className="app">
