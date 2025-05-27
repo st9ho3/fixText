@@ -22,7 +22,7 @@ This project is a React-based web application that utilizes the Google Generativ
 
 ## Usage
 
--> [Visit Here](hhtps://txet.netlify.app)
+-> [Visit Here](https://txet.netlify.app)
 
 After setup, you can run the application using the scripts defined in `package.json`.
 
