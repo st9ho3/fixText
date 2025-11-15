@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { buildPrompt } from './prompt'
 import ProgressiveRenderer from './ProgressiveRenderer'
+import Sidebar from './Sidebar'
+import './App.css'
 
 function App() {
   const [response, setResponse] = useState('')
@@ -9,6 +11,7 @@ function App() {
   const [error, setError] = useState('')
   const [myText, setMyText] = useState('')
   const [storageTexts, setStorageTexts] = useState([])
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
 
   useEffect(() => {
     const texts = localStorage.getItem('myText')
@@ -53,34 +56,40 @@ function App() {
   
 
   return (
-    <div className="app">
-      <h1>Edit your text</h1>
-      <form onSubmit={handleSubmit}>
-        <button name='createParagraph' type="submit" disabled={isLoading}>
-          {isLoading === 'createParagraph' ? 'Thinking...' : 'Create paragraph'}
-        </button>
-        <button name='outlineMainPoints'  type="submit" disabled={isLoading}>
-          {isLoading === 'outlineMainPoints' ? 'Thinking...' : 'Outline main points'}
-        </button>
-      </form>
+    <>
+      <Sidebar
+        isCollapsed={isSidebarCollapsed}
+        setIsCollapsed={setIsSidebarCollapsed}
+      />
+      <div className={`app ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
+        <h1>Edit your text</h1>
+        <form onSubmit={handleSubmit}>
+          <button name='createParagraph' type="submit" disabled={isLoading}>
+            {isLoading === 'createParagraph' ? 'Thinking...' : 'Create paragraph'}
+          </button>
+          <button name='outlineMainPoints'  type="submit" disabled={isLoading}>
+            {isLoading === 'outlineMainPoints' ? 'Thinking...' : 'Outline main points'}
+          </button>
+        </form>
 
-      {error && <div className="error">{error}</div>}
-      
-      <form onSubmit={handleSubmitText}>
-        <input
-          type="text"
-          value={myText}
-          onChange={(e) => setMyText(e.target.value)}
-          placeholder="Write your text..."
-        />
-        <button type="submit" disabled={isLoading}>
-          Enter Text
-        </button>
-        <button style={{backgroundColor:'blue'}} onClick={handleCopyText}>Copy Text</button>
-      </form>
-      <div className='response'>{!response ? storageTexts : response}</div>
-      
-    </div>
+        {error && <div className="error">{error}</div>}
+
+        <form onSubmit={handleSubmitText}>
+          <input
+            type="text"
+            value={myText}
+            onChange={(e) => setMyText(e.target.value)}
+            placeholder="Write your text..."
+          />
+          <button type="submit" disabled={isLoading}>
+            Enter Text
+          </button>
+          <button style={{backgroundColor:'blue'}} onClick={handleCopyText}>Copy Text</button>
+        </form>
+        <div className='response'>{!response ? storageTexts : response}</div>
+
+      </div>
+    </>
   )
 }
 
