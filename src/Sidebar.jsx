@@ -9,14 +9,8 @@ function Sidebar({ isCollapsed, setIsCollapsed }) {
     <>
       <div className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
         <div className="sidebar-content">
-          <h2>Menu</h2>
-          <nav>
-            <ul>
-              <li>Dashboard</li>
-              <li>History</li>
-              <li>Settings</li>
-            </ul>
-          </nav>
+          <h2>History</h2>
+          {/* History logs will be displayed here */}
         </div>
       </div>
       <button
