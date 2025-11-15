@@ -1,8 +1,23 @@
 import './Sidebar.css'
 
-function Sidebar({ isCollapsed, setIsCollapsed }) {
+function Sidebar({ isCollapsed, setIsCollapsed, historyEntries = [], onLoadEntry }) {
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed)
+  }
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString)
+    return date.toLocaleString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    })
+  }
+
+  const truncateText = (text, maxLength = 50) => {
+    if (!text) return 'No text'
+    return text.length > maxLength ? text.substring(0, maxLength) + '...' : text
   }
 
   return (
@@ -10,7 +25,36 @@ function Sidebar({ isCollapsed, setIsCollapsed }) {
       <div className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
         <div className="sidebar-content">
           <h2>History</h2>
-          {/* History logs will be displayed here */}
+          <div className="history-list">
+            {historyEntries.length === 0 ? (
+              <p className="no-history">No history yet</p>
+            ) : (
+              historyEntries.map((entry) => (
+                <div
+                  key={entry.id}
+                  className="history-item"
+                  onClick={() => onLoadEntry(entry)}
+                >
+                  <div className="history-item-header">
+                    <span className="history-item-type">
+                      {entry.promptType === 'createParagraph' ? '📝' : '📋'}
+                    </span>
+                    <span className="history-item-date">
+                      {formatDate(entry.createdAt)}
+                    </span>
+                  </div>
+                  <div className="history-item-text">
+                    {truncateText(entry.inputText)}
+                  </div>
+                  <div className="history-item-status">
+                    {entry.status === 'completed' && '✓'}
+                    {entry.status === 'pending' && '⏳'}
+                    {entry.status === 'error' && '✗'}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
         </div>
       </div>
       <button
