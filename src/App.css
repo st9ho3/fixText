@@ -5,11 +5,12 @@
   padding: 20px;
   font-family: Arial, sans-serif;
   text-align: center;
-  transition: margin-left 0.3s ease;
+  transition: margin 0.3s ease;
 }
 
 .app.sidebar-collapsed {
-  margin-left: 50px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
 h1 {
