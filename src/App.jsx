@@ -8,6 +8,7 @@ import './App.css'
 function App() {
   const [response, setResponse] = useState('')
   const [isLoading, setIsLoading] = useState('')
+  const [isStreaming, setIsStreaming] = useState(false)
   const [error, setError] = useState('')
   const [myText, setMyText] = useState('')
   const [storageTexts, setStorageTexts] = useState('')
@@ -64,12 +65,41 @@ function App() {
         setCurrentEntryId(entryId)
       }
 
-      // Generate AI response
+      // Generate AI response with streaming
       const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' })
       const prompt = buildPrompt(storageTexts, promptType)
-      const result = await model.generateContent(prompt)
-      const text = result.response.text()
-      setResponse(text)
+      const result = await model.generateContentStream(prompt)
+
+      let streamedText = ''
+      let buffer = ''
+      setResponse('') // Clear previous response
+      setIsStreaming(true)
+
+      // Stream the response with smoother updates
+      let lastUpdateTime = Date.now()
+      const UPDATE_INTERVAL = 50 // Update every 50ms for smoother rendering
+
+      for await (const chunk of result.stream) {
+        const chunkText = chunk.text()
+        streamedText += chunkText
+        buffer += chunkText
+
+        // Update UI only after interval has passed or if buffer is significant
+        const now = Date.now()
+        if (now - lastUpdateTime >= UPDATE_INTERVAL || buffer.length > 10) {
+          setResponse(streamedText)
+          buffer = ''
+          lastUpdateTime = now
+        }
+      }
+
+      // Final update to ensure all text is displayed
+      if (buffer.length > 0) {
+        setResponse(streamedText)
+      }
+
+      setIsStreaming(false)
+      const text = streamedText
 
       // Update database entry with AI response
       await fetch('/api/update-entry', {
@@ -120,6 +150,33 @@ function App() {
     setResponse(entry.outputText || '')
     setCurrentEntryId(entry.id)
   }
+
+  const handleDeleteEntry = async (entryId) => {
+    try {
+      const response = await fetch(`/api/delete-entry?id=${entryId}`, {
+        method: 'DELETE'
+      })
+
+      if (response.ok) {
+        // If the deleted entry was the current one, clear it
+        if (currentEntryId === entryId) {
+          setCurrentEntryId(null)
+          setStorageTexts('')
+          setResponse('')
+        }
+
+        // Reload history entries
+        loadHistoryEntries()
+      } else {
+        const error = await response.json()
+        alert('Failed to delete entry: ' + (error.error || 'Unknown error'))
+      }
+    } catch (err) {
+      console.error('Error deleting entry:', err)
+      alert('Failed to delete entry')
+    }
+  }
+
   const handleCopyText = () => {
     navigator.clipboard.writeText(response)
       .then(() => {
@@ -138,6 +195,7 @@ function App() {
         setIsCollapsed={setIsSidebarCollapsed}
         historyEntries={historyEntries}
         onLoadEntry={loadHistoryEntry}
+        onDeleteEntry={handleDeleteEntry}
       />
       <div className={`app ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
         <h1>Edit your text</h1>
@@ -164,7 +222,10 @@ function App() {
           </button>
           <button style={{backgroundColor:'blue'}} onClick={handleCopyText}>Copy Text</button>
         </form>
-        <div className='response'>{!response ? storageTexts : response}</div>
+        <div className='response'>
+          {!response ? storageTexts : response}
+          {isStreaming && <span className="streaming-cursor">▊</span>}
+        </div>
 
       </div>
     </>

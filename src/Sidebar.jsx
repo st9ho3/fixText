@@ -1,6 +1,6 @@
 import './Sidebar.css'
 
-function Sidebar({ isCollapsed, setIsCollapsed, historyEntries = [], onLoadEntry }) {
+function Sidebar({ isCollapsed, setIsCollapsed, historyEntries = [], onLoadEntry, onDeleteEntry }) {
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed)
   }
@@ -18,6 +18,14 @@ function Sidebar({ isCollapsed, setIsCollapsed, historyEntries = [], onLoadEntry
   const truncateText = (text, maxLength = 50) => {
     if (!text) return 'No text'
     return text.length > maxLength ? text.substring(0, maxLength) + '...' : text
+  }
+
+  const handleDelete = async (e, entryId) => {
+    e.stopPropagation() // Prevent triggering the onClick of the parent div
+
+    if (window.confirm('Are you sure you want to delete this entry?')) {
+      await onDeleteEntry(entryId)
+    }
   }
 
   return (
@@ -46,10 +54,19 @@ function Sidebar({ isCollapsed, setIsCollapsed, historyEntries = [], onLoadEntry
                   <div className="history-item-text">
                     {truncateText(entry.inputText)}
                   </div>
-                  <div className="history-item-status">
-                    {entry.status === 'completed' && '✓'}
-                    {entry.status === 'pending' && '⏳'}
-                    {entry.status === 'error' && '✗'}
+                  <div className="history-item-footer">
+                    <span className="history-item-status">
+                      {entry.status === 'completed' && '✓'}
+                      {entry.status === 'pending' && '⏳'}
+                      {entry.status === 'error' && '✗'}
+                    </span>
+                    <button
+                      className="delete-button"
+                      onClick={(e) => handleDelete(e, entry.id)}
+                      aria-label="Delete entry"
+                    >
+                      🗑️
+                    </button>
                   </div>
                 </div>
               ))

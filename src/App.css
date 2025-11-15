@@ -103,6 +103,22 @@ form:last-of-type input:focus {
   flex-wrap: wrap;
 }
 
+.streaming-cursor {
+  display: inline-block;
+  animation: blink 1s step-end infinite;
+  margin-left: 2px;
+  color: #00f;
+}
+
+@keyframes blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
+  }
+}
+
 /* Base styles */
 .container {
   max-width: 48rem;
