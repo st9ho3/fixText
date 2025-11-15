@@ -30,6 +30,13 @@ function Sidebar({ isCollapsed, setIsCollapsed, historyEntries = [], onLoadEntry
 
   return (
     <>
+      <button
+        className={`sidebar-toggle ${isCollapsed ? 'collapsed' : ''}`}
+        onClick={toggleSidebar}
+        aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+      >
+        {isCollapsed ? '→' : '←'}
+      </button>
       <div className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
         <div className="sidebar-content">
           <h2>History</h2>
@@ -74,13 +81,6 @@ function Sidebar({ isCollapsed, setIsCollapsed, historyEntries = [], onLoadEntry
           </div>
         </div>
       </div>
-      <button
-        className="sidebar-toggle"
-        onClick={toggleSidebar}
-        aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-      >
-        {isCollapsed ? '→' : '←'}
-      </button>
     </>
   )
 }
